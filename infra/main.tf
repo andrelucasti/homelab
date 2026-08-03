@@ -7,6 +7,11 @@ terraform {
     }
 }
 
+resource "random_password" "k3s_token" {
+  length  = 48
+  special = false
+}
+
 provider "multipass" {
     
 }
@@ -17,4 +22,28 @@ resource "multipass_instance" "k8s-master" {
     memory = "4G"
     image  = "24.04"
     disk = "20G"
+    cloud_init_file = templatefile("cloud-init/master.yaml",{
+        k3s_token = random_password.k3s_token.result
+
+    })
+}
+
+resource "multipass_instance" "k8s-worker" {
+    count = 2
+    name = "k8s-worker-${count.index}"
+    cpus = "2"
+    memory = "4G"
+    disk = "20G"
+    cloud_init_file = templatefile("cloud-init/worker.yaml",{
+        master_ip = multipass_instance.k8s-master.ipv4[0]
+        k3s_token = random_password.k3s_token.result
+
+    })
+
+    depends_on = [ multipass_instance.k8s-master ]
+  
+}
+
+output "master_ip" {
+    value = multipass_instance.k8s-master.ipv4[0]
 }

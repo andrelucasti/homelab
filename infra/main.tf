@@ -38,8 +38,9 @@ resource "multipass_instance" "k8s-worker" {
     memory = "4G"
     disk = "20G"
     cloud_init = templatefile("${path.module}/cloud_init/worker.yaml.tpl",{
-        master_ip = multipass_instance.k8s-master.ipv4[0]
-        k3s_token = random_password.k3s_token.result
+        master_ip         = multipass_instance.k8s-master.ipv4[0]
+        k3s_token         = random_password.k3s_token.result
+        tailscale_authkey = var.tailscale_authkey
 
     })
 

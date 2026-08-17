@@ -22,10 +22,12 @@ resource "multipass_instance" "k8s-master" {
     memory = "4G"
     image  = "24.04"
     disk = "20G"
-    cloud_init_file = templatefile("${path.module}/cloud-init/master.yaml.tpl",{
+    cloud_init = templatefile("${path.module}/cloud_init/master.yaml.tpl",{
         k3s_token = random_password.k3s_token.result
 
     })
+
+    wait_for_cloud_init = true
 }
 
 resource "multipass_instance" "k8s-worker" {
@@ -34,7 +36,7 @@ resource "multipass_instance" "k8s-worker" {
     cpus = "2"
     memory = "4G"
     disk = "20G"
-    cloud_init_file = templatefile("${path.module}/cloud-init/worker.yaml.tpl",{
+    cloud_init = templatefile("${path.module}/cloud_init/worker.yaml.tpl",{
         master_ip = multipass_instance.k8s-master.ipv4[0]
         k3s_token = random_password.k3s_token.result
 

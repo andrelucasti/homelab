@@ -3,7 +3,7 @@ terraform {
         multipass = {
             source = "todoroff/multipass"
         }
-        
+
     }
 }
 
@@ -23,7 +23,8 @@ resource "multipass_instance" "k8s-master" {
     image  = "24.04"
     disk = "20G"
     cloud_init = templatefile("${path.module}/cloud_init/master.yaml.tpl",{
-        k3s_token = random_password.k3s_token.result
+        k3s_token         = random_password.k3s_token.result
+        tailscale_authkey = var.tailscale_authkey
 
     })
 

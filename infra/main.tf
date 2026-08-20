@@ -32,7 +32,7 @@ resource "multipass_instance" "k8s-master" {
 }
 
 resource "multipass_instance" "k8s-worker" {
-    count = 2
+    count = 3
     name = "k8s-worker-${count.index}"
     cpus = "2"
     memory = "4G"

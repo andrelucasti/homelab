@@ -1,0 +1,16 @@
+{{- if .Values.instrumentation.enabled }}
+apiVersion: opentelemetry.io/v1alpha1
+kind: Instrumentation
+metadata:
+  name: default
+  namespace: {{ .Release.Namespace }}
+spec:
+  exporter:
+    endpoint: http://{{ .Values.collector.name }}-collector.{{ .Release.Namespace }}.svc.cluster.local:4318
+  propagators:
+    - tracecontext
+    - baggage
+  sampler:
+    type: parentbased_traceidratio
+    argument: "{{ .Values.instrumentation.samplerArg }}"
+{{- end }}

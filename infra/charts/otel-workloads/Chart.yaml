@@ -1,0 +1,5 @@
+apiVersion: v2
+name: otel-workloads
+description: OpenTelemetryCollector e Instrumentation CRs
+type: application
+version: 0.1.0

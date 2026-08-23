@@ -1,0 +1,12 @@
+collector:
+  name: homelab
+  mode: deployment
+  replicas: 1
+  memoryLimit: 512Mi
+  exporter:
+    endpoint: 
+    insecure: true
+
+instrumentation:
+  enabled: false
+  samplerArg: "0.25"

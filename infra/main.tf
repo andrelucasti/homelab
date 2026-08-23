@@ -41,17 +41,18 @@ output "master_ip" {
 }
 
 data "external" "kubeconfig" {
-    depends_on = [ multipass_instance.k8s-master ]
-    program = ["bash", "-c", <<-EOT
+  depends_on = [multipass_instance.k8s-master]
+
+  program = ["bash", "-c", <<-EOT
     set -euo pipefail
 
-    TS_IP=$$(multipass exec k8s-master -- tailscale ip -4 | tr -d '\r\n')
-    [ -n "$$TS_IP" ] || { echo "tailscale nao retornou IPv4 no master" >&2; exit 1; }
+    TS_IP=$(multipass exec k8s-master -- tailscale ip -4 | tr -d '\r\n')
+    [ -n "$TS_IP" ] || { echo "tailscale nao retornou IPv4 no master" >&2; exit 1; }
 
-    KC=$$(multipass exec k8s-master -- sudo cat /etc/rancher/k3s/k3s.yaml \
-          | sed "s#127\.0\.0\.1#$$TS_IP#")
+    KC=$(multipass exec k8s-master -- sudo cat /etc/rancher/k3s/k3s.yaml \
+         | sed "s#127\.0\.0\.1#$TS_IP#")
 
-    jq -n --arg raw "$$KC" '{raw: $$raw}'
+    jq -n --arg raw "$KC" '{raw: $raw}'
   EOT
   ]
 }

@@ -3,3 +3,7 @@ variable "tailscale_authkey" {
   type        = string
   sensitive   = true
 }
+
+variable "kubeconfig_path" {
+  default = ["${path.module}/kubeconfig.yaml"]
+}

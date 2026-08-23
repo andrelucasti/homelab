@@ -59,6 +59,6 @@ data "external" "kubeconfig" {
 
 resource "local_sensitive_file" "kubeconfig" {
   content           = data.external.kubeconfig.result.raw
-  filename          = "${path.module}/kubeconfig.yaml"
+  filename          = var.kubeconfig_path
   file_permission   = "0600"
 }

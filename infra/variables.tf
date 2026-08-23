@@ -5,5 +5,5 @@ variable "tailscale_authkey" {
 }
 
 variable "kubeconfig_path" {
-  default = ["${path.module}/kubeconfig.yaml"]
+  default = "${path.module}/kubeconfig.yaml"
 }

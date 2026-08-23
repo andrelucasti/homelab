@@ -12,5 +12,5 @@ provider "multipass" {
 }
 
 provider "kubernetes" {
-    config_paths = var.kubeconfig_path 
+    config_path = var.kubeconfig_path 
 }

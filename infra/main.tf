@@ -76,4 +76,6 @@ resource "helm_release" "cert_manager" {
     { name = "crds.keep", value = "true"} 
     ]
 
+    wait = true
+    timeout = 600
 }

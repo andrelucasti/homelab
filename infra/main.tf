@@ -62,3 +62,12 @@ resource "local_sensitive_file" "kubeconfig" {
   filename        = "${path.module}/${var.kubeconfig_path}"
   file_permission = "0600"
 }
+
+resource "helm_release" "cert_manager" {
+  name  = "cert-manager"
+  chart = "cert-manager"
+  repository = "https://charts.jetstack.io"
+  version = "v1.21.1"
+  namespace = "cert-manager"
+  create_namespace = true
+}

@@ -10,6 +10,10 @@ terraform {
       source  = "hashicorp/kubernetes"
       version = "~> 2.35"
     }
+    helm = {
+      source = "hashicorp/helm"
+      version = "~>3.2"
+    }
     external = {
       source  = "hashicorp/external"
       version = "~> 2.3"
@@ -30,4 +34,10 @@ provider "multipass" {
 
 provider "kubernetes" {
   config_path = "${path.module}/${var.kubeconfig_path}"
+}
+
+provider "helm" {
+  kubernetes = {
+    config_path = "${path.module}/${var.kubeconfig_path}"
+  }
 }

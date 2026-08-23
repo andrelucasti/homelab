@@ -17,3 +17,8 @@ override.tf.json
 
 .terraformrc
 terraform.rc
+
+# Kubeconfig gerado (contem credencial cluster-admin do k3s)
+kubeconfig.yaml
+**/kubeconfig.yaml
+*.kubeconfig

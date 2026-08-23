@@ -5,5 +5,7 @@ variable "tailscale_authkey" {
 }
 
 variable "kubeconfig_path" {
-  default = "${path.module}/kubeconfig.yaml"
+  description = "Nome do arquivo de kubeconfig gerado, relativo ao modulo."
+  type        = string
+  default     = "kubeconfig.yaml"
 }

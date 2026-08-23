@@ -4,40 +4,40 @@ resource "random_password" "k3s_token" {
 }
 
 resource "multipass_instance" "k8s-master" {
-    name        = "k8s-master"
-    cpus        = "2"
-    memory      = "4G"
-    image       = "24.04"
-    disk        = "20G"
-    cloud_init  = templatefile("${path.module}/cloud_init/master.yaml.tpl",{
-        k3s_token         = random_password.k3s_token.result
-        tailscale_authkey = var.tailscale_authkey
+  name   = "k8s-master"
+  cpus   = "2"
+  memory = "4G"
+  image  = "24.04"
+  disk   = "20G"
+  cloud_init = templatefile("${path.module}/cloud_init/master.yaml.tpl", {
+    k3s_token         = random_password.k3s_token.result
+    tailscale_authkey = var.tailscale_authkey
 
-    })
+  })
 
-    wait_for_cloud_init = true
+  wait_for_cloud_init = true
 }
 
 resource "multipass_instance" "k8s-worker" {
-    count       = 3
-    name        = "k8s-worker-${count.index}"
-    cpus        = "2"
-    image       = "24.04"
-    memory      = "4G"
-    disk        = "20G"
-    cloud_init  = templatefile("${path.module}/cloud_init/worker.yaml.tpl",{
-        master_ip         = multipass_instance.k8s-master.ipv4[0]
-        k3s_token         = random_password.k3s_token.result
-        tailscale_authkey = var.tailscale_authkey
+  count  = 3
+  name   = "k8s-worker-${count.index}"
+  cpus   = "2"
+  image  = "24.04"
+  memory = "4G"
+  disk   = "20G"
+  cloud_init = templatefile("${path.module}/cloud_init/worker.yaml.tpl", {
+    master_ip         = multipass_instance.k8s-master.ipv4[0]
+    k3s_token         = random_password.k3s_token.result
+    tailscale_authkey = var.tailscale_authkey
 
-    })
+  })
 
-    depends_on  = [ multipass_instance.k8s-master ]
-  
+  depends_on = [multipass_instance.k8s-master]
+
 }
 
 output "master_ip" {
-    value = multipass_instance.k8s-master.ipv4[0]
+  value = multipass_instance.k8s-master.ipv4[0]
 }
 
 data "external" "kubeconfig" {
@@ -58,7 +58,7 @@ data "external" "kubeconfig" {
 }
 
 resource "local_sensitive_file" "kubeconfig" {
-  content           = data.external.kubeconfig.result.raw
-  filename          = var.kubeconfig_path
-  file_permission   = "0600"
+  content         = data.external.kubeconfig.result.raw
+  filename        = "${path.module}/${var.kubeconfig_path}"
+  file_permission = "0600"
 }

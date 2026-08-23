@@ -1,8 +1,8 @@
 terraform {
   backend "oci" {
     # Required
-    bucket            = "homelab-terraform-andre"
-    namespace         = "axzzzpaxgpvp"
+    bucket    = "homelab-terraform-andre"
+    namespace = "axzzzpaxgpvp"
 
     config_file_profile = "HOMELAB"
 

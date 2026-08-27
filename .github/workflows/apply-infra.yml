@@ -6,7 +6,7 @@ on:
       - main
 
 jobs: 
-  apply:
+  instance-connection:
     permissions:
       id-token: write
     runs-on: ubuntu-latest
@@ -17,9 +17,3 @@ jobs:
           oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
           audience: ${{ secrets.TS_AUDIENCE }}
           tags: tag:ci
-
-      - name: checkout
-        uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-        

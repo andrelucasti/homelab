@@ -20,8 +20,21 @@ jobs:
 
       - name: Verifica conectividade com o homelab
         run: tailscale status --peers | grep -q andrelab
+      
+      - name: Terraform plan no homelab
+        env:
+          TF_VAR_tailscale_authkey: ${{ secrets.TS_AUTHKEY }}
+        run: | 
+          tailscale ssh andre@andrelab
+          cd ~/homelab
+          git fetch --all --prune
+          git reset --hard origin/main
+          cd infra
+          terraform init -input=false
+          terraform plan 
 
-      - name: Terraform apply no andrelab
+
+      - name: Terraform apply no homelab
         env:
           TF_VAR_tailscale_authkey: ${{ secrets.TS_AUTHKEY }}
         run: |

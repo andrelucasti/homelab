@@ -19,7 +19,7 @@ resource "multipass_instance" "k8s-master" {
 }
 
 resource "multipass_instance" "k8s-worker" {
-  count  = 3
+  count  = 2
   name   = "k8s-worker-${count.index}"
   cpus   = "2"
   image  = "24.04"

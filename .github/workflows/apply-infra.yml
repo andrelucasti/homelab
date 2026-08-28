@@ -26,17 +26,21 @@ jobs:
           TF_VAR_tailscale_authkey: ${{ secrets.TS_AUTHKEY }}
         run: | 
           {
+            # Vai por stdin, nao por argv, para nao aparecer no `ps` do andrelab.
             printf "export TF_VAR_tailscale_authkey=%q\n" "$TF_VAR_tailscale_authkey"
-              cat <<'REMOTE'
-            set -euo pipefail
-            cd ~/homelab
-            git fetch --all --prune
-            git reset --hard origin/main
-            cd infra
-            terraform init
-            terraform plan
-            REMOTE
+            cat <<'REMOTE'
+          set -euo pipefail
+
+          cd ~/homelab
+          git fetch --all --prune
+          git reset --hard origin/main
+
+          cd infra
+          terraform init -input=false
+          terraform plan -auto-approve -input=false
+          REMOTE
           } | tailscale ssh andre@andrelab 'bash -s'
+
 
 
 

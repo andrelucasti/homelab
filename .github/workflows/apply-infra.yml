@@ -19,5 +19,12 @@ jobs:
           tags: tag:ci
       
       - name: SSH
-        run: tailscale ssh andre@andrelab && ls
+        run: |
+          tailscale ssh andre@andrelab '
+            set -euo pipefail
+            cd ~/homelab && git fetch --all && git reset --hard origin/main
+            cd infra
+            terraform init -input=false
+            terraform apply -auto-approve -input=false
+          '
 

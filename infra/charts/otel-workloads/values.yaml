@@ -2,7 +2,7 @@ collector:
   name: homelab
   mode: deployment
   replicas: 1
-  memoryLimit: 512Mi
+  memoryLimit: 768Mi
   exporter:
     endpoint: 
     insecure: true

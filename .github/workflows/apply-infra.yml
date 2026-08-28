@@ -39,4 +39,4 @@ jobs:
           terraform init -input=false
           terraform apply -auto-approve -input=false
           REMOTE
-          } | ssh andre@andrelab 'bash -s'
+          } | tailscale ssh andre@andrelab 'bash -s'

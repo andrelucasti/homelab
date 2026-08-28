@@ -25,13 +25,19 @@ jobs:
         env:
           TF_VAR_tailscale_authkey: ${{ secrets.TS_AUTHKEY }}
         run: | 
-          tailscale ssh andre@andrelab
-          cd ~/homelab
-          git fetch --all --prune
-          git reset --hard origin/main
-          cd infra
-          terraform init -input=false
-          terraform plan 
+          {
+            printf "export TF_VAR_tailscale_authkey=%q\n" "$TF_VAR_tailscale_authkey"
+              cat <<'REMOTE'
+            set -euo pipefail
+            cd ~/homelab
+            git fetch --all --prune
+            git reset --hard origin/main
+            cd infra
+            terraform init
+            terraform plan
+            REMOTE
+          } | tailscale ssh andre@andrelab
+
 
 
       - name: Terraform apply no homelab

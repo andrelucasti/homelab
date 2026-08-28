@@ -37,7 +37,7 @@ jobs:
 
           cd infra
           terraform init -input=false
-          terraform plan -auto-approve -input=false
+          terraform plan -input=false
           REMOTE
           } | tailscale ssh andre@andrelab 'bash -s'
 

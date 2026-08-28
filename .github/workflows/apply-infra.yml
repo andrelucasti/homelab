@@ -36,7 +36,7 @@ jobs:
             terraform init
             terraform plan
             REMOTE
-          } | tailscale ssh andre@andrelab
+          } | tailscale ssh andre@andrelab 'bash -s'
 
 
 

@@ -36,10 +36,6 @@ resource "multipass_instance" "k8s-worker" {
 
 }
 
-output "master_ip" {
-  value = multipass_instance.k8s-master.ipv4[0]
-}
-
 data "external" "kubeconfig" {
   depends_on = [multipass_instance.k8s-master]
 

@@ -5,8 +5,13 @@ on:
     branches:
       - main
 
-jobs: 
-  instance-connection:
+# Dois applies simultaneos corrompem o state no bucket OCI.
+concurrency:
+  group: terraform-apply-homelab
+  cancel-in-progress: false
+
+jobs:
+  apply:
     permissions:
       id-token: write
     runs-on: ubuntu-latest
@@ -17,14 +22,26 @@ jobs:
           oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
           audience: ${{ secrets.TS_AUDIENCE }}
           tags: tag:ci
-      
-      - name: SSH
-        run: |
-          tailscale ssh andre@andrelab '
-            set -euo pipefail
-            cd ~/homelab && git fetch --all && git reset --hard origin/main
-            cd infra
-            terraform init -input=false
-            terraform apply -auto-approve -input=false
-          '
 
+      - name: Verifica conectividade com o andrelab
+        run: tailscale status --peers | grep -q andrelab
+
+      - name: Terraform apply no andrelab
+        env:
+          TF_VAR_tailscale_authkey: ${{ secrets.TS_AUTHKEY }}
+        run: |
+          {
+            # Vai por stdin, nao por argv, para nao aparecer no `ps` do andrelab.
+            printf "export TF_VAR_tailscale_authkey=%q\n" "$TF_VAR_tailscale_authkey"
+            cat <<'REMOTE'
+          set -euo pipefail
+
+          cd ~/homelab
+          git fetch --all --prune
+          git reset --hard origin/main
+
+          cd infra
+          terraform init -input=false
+          terraform apply -auto-approve -input=false
+          REMOTE
+          } | tailscale ssh andre@andrelab 'bash -s'

@@ -96,7 +96,7 @@ resource "helm_release" "otel_operator" {
     upgrade_install = true
     atomic = true
     cleanup_on_fail = true
-    depends_on = [ helm_release.cert_manager ]
+    depends_on = [multipass_instance.k8s-master, helm_release.cert_manager ]
 }
 
 resource "helm_release" "otel_workloads" {
@@ -107,6 +107,6 @@ resource "helm_release" "otel_workloads" {
     wait = true
     upgrade_install = true
 
-    depends_on = [ helm_release.otel_operator ]
+    depends_on = [multipass_instance.k8s-master, helm_release.otel_operator ]
 }
 

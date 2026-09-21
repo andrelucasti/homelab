@@ -1,5 +1,5 @@
 module "homelab_cluster" {
-  source = "./modules/provisioner"
+  source = "./modules/cluster"
   cpus = "2"
   memory = "4G"
   disk   = "10G"

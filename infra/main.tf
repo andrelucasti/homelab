@@ -8,5 +8,4 @@ module "homelab_cluster" {
 
 module "plataform" {
   source = "./modules/plataform"
-  depends_on = [ module.homelab_cluster ]
 }

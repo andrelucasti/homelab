@@ -5,3 +5,8 @@ module "homelab_cluster" {
   disk   = "10G"
   workers = 3
 }
+
+module "plataform" {
+  source = "./modules/plataform"
+  depends_on = [ module.homelab_cluster ]
+}

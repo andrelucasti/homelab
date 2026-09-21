@@ -75,6 +75,8 @@ resource "helm_release" "cert_manager" {
 
     wait = true
     timeout = 600
+
+    depends_on = [multipass_instance.k8s-master]
 }
 
 resource "helm_release" "otel_operator" {

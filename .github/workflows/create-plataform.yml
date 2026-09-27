@@ -35,8 +35,8 @@ jobs:
           git fetch --all --prune
           git reset --hard origin/main
 
-          cd infra
-          terraform init -input=false
+          cd infra/platform
+          terraform init --upgrade -input=false
           terraform plan -input=false
           REMOTE
           } | tailscale ssh andre@andrelab 'bash -s'
@@ -58,8 +58,7 @@ jobs:
           git fetch --all --prune
           git reset --hard origin/main
 
-          cd infra
-          terraform init -input=false
+          cd infra/platform
           terraform apply -auto-approve -input=false
           REMOTE
           } | tailscale ssh andre@andrelab 'bash -s'

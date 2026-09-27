@@ -1,0 +1,60 @@
+name: Atualiza toda a infra do homelab
+
+on: workflow_dispatch
+
+jobs:
+  create-cluster:
+    permissions:
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          audience: ${{ secrets.TS_AUDIENCE }}
+          tags: tag:ci
+
+      - name: Verifica conectividade com o homelab
+        run: tailscale status --peers | grep -q andrelab
+      
+      - name: Terraform plan no homelab
+        env:
+          TF_VAR_tailscale_authkey: ${{ secrets.TS_AUTHKEY }}
+        run: | 
+          {
+            # Vai por stdin, nao por argv, para nao aparecer no `ps` do andrelab.
+            printf "export TF_VAR_tailscale_authkey=%q\n" "$TF_VAR_tailscale_authkey"
+            cat <<'REMOTE'
+          set -euo pipefail
+
+          cd ~/homelab
+          git fetch --all --prune
+          git reset --hard origin/main
+
+          cd infra/cluster
+          terraform init --upgrade -input=false
+          terraform plan -input=false
+          REMOTE
+          } | tailscale ssh andre@andrelab 'bash -s'
+
+# pensar em uma forma de colocar uma condição de aprovação após o plan
+
+      - name: Terraform apply no homelab
+        env:
+          TF_VAR_tailscale_authkey: ${{ secrets.TS_AUTHKEY }}
+        run: |
+          {
+            # Vai por stdin, nao por argv, para nao aparecer no `ps` do andrelab.
+            printf "export TF_VAR_tailscale_authkey=%q\n" "$TF_VAR_tailscale_authkey"
+            cat <<'REMOTE'
+          set -euo pipefail
+
+          cd ~/homelab
+          git fetch --all --prune
+          git reset --hard origin/main
+
+          cd infra/cluster
+          terraform apply -auto-approve -input=false
+          REMOTE
+          } | tailscale ssh andre@andrelab 'bash -s'

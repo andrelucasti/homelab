@@ -7,6 +7,6 @@ terraform {
     config_file_profile = "HOMELAB"
 
     # Nome do objeto do state dentro do bucket
-    key = "homelab/terraform.tfstate"
+    key = "cluster/terraform.tfstate"
   }
 }

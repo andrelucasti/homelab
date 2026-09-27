@@ -22,3 +22,6 @@ terraform.rc
 kubeconfig.yaml
 **/kubeconfig.yaml
 *.kubeconfig
+
+# Artefatos gerados entre os root modules cluster e platform
+infra/.generated/

@@ -9,7 +9,7 @@ packages:
 
 write_files:
   - path: /run/tailscale-authkey
-    permissions: '0600'
+    permissions: '0o600'
     owner: root:root
     content: "${tailscale_authkey}"
 

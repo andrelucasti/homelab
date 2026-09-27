@@ -38,7 +38,6 @@ resource "multipass_instance" "k8s-worker" {
 
 data "external" "kubeconfig" {
   depends_on = [multipass_instance.k8s-master]
-  
 
   program = ["bash", "-c", <<-EOT
     set -euo pipefail

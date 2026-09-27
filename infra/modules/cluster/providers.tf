@@ -15,21 +15,6 @@ terraform {
       source  = "hashicorp/external"
       version = "~> 2.3"
     }
-    
-    local = {
-      source  = "hashicorp/local"
-      version = "~> 2.5"
-    }
-
-    kubernetes = {
-      source  = "hashicorp/kubernetes"
-      version = "~> 2.35"
-    }
-    helm = {
-      source = "hashicorp/helm"
-      version = "~>3.2"
-    }
-    
   }
 }
 

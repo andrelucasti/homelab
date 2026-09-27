@@ -1,4 +1,4 @@
-name: Atualiza toda a infra do homelab
+name: Provisiona recursos da plataforma
 
 on:
   push:

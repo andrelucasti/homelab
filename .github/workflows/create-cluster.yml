@@ -1,4 +1,4 @@
-name: Atualiza toda a infra do homelab
+name: Cria/Atualiza o cluster k8s
 
 on: workflow_dispatch
 
